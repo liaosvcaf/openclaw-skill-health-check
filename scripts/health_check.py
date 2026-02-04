@@ -167,6 +167,17 @@ if gw_log.exists():
     else:
         print("  Telegram: not configured")
 
+    dc = [l for l in gw_lines if "discord" in l.lower() and ("logged in" in l.lower() or "starting provider" in l.lower())]
+    if dc:
+        ts_match = re.search(r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", dc[-1])
+        ok(f"Discord: connected (last login at {ts_match.group(1) if ts_match else 'unknown'})")
+    else:
+        dc_cfg = [l for l in gw_lines if "discord" in l.lower() and "not enabled" in l.lower()]
+        if dc_cfg:
+            print("  Discord: configured but not enabled")
+        else:
+            print("  Discord: not configured")
+
     ws = [l for l in gw_lines if "webchat connected" in l]
     if ws:
         ts_match = re.search(r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", ws[-1])
